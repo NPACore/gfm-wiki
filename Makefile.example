@@ -9,3 +9,11 @@ out/singlefile.pdf: $(filter-out readme.md,$(wildcard *.md)) | out/
 
 out/:
 	mkdir -p $@
+        
+
+.PHONY: git-bug
+git-bug:
+	# git bug bridge configure
+	git bug bridge pull
+        # eval $(ssh-agent); ssh-add ~/.ssh/id_rsa
+        git bug pull
