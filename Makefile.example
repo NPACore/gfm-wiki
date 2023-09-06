@@ -1,0 +1,11 @@
+REPO := NPACore/gfm-wiki  # your github org/repo
+out/singlefile.pdf: $(filter-out readme.md,$(wildcard *.md)) | out/
+	perl -pe '\
+		s/\([^[)]+?.md#([^[)]+?)\)/(#\1)/g;\
+		s/\(([^[)]+?).md\)/(#\1)/g;\
+		s,$(REPO)#(\d+),[#\1](https://github.com/$(REPO)/issues/\1),g'\
+		$^ | \
+	pandoc -V colorlinks=true --pdf-engine=xelatex -f gfm -t pdf -i - -o $@
+
+out/:
+	mkdir -p $@
