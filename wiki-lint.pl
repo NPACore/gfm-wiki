@@ -46,9 +46,9 @@ for my $f (@md){
 
     # check file name isn't crazy and top level header matches file
     say "WARNING: filename '$f' does not conform!" if $f ne linkify($f) . ".md";
-    say "WANRING: $f: first header should be match filename"
+    say "WANRING: $f: first header should be match filename not '$file_headers[0]'"
         if ($#file_headers < 0 or $file_headers[0].".md" ne $f ) and
-        $f !~ /readme.md$/;
+        $f !~ /readme.md$|index.md$/;
 
     ## Links
 
