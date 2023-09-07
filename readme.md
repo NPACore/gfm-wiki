@@ -49,7 +49,10 @@ Use <kbd>M-x</kbd> `list-packages` to install `use-package-quelpa`. then add bel
 ```
 
 ### Variables
-* `gfm-wiki-repo-name` contains the prefix for issues. github.com will render a link from anything thing that looks like `org/repo#id-num`. This variable stores the `org/repo` part. (The `id-num` is fetched using `git-bug` with a github bridge. See `gfm-wiki-insert-issue`)
+* `gfm-wiki-repo-name` contains the prefix for issues. github.com will render a link from anything thing that looks like `org/repo#id-num`. This variable stores the `org/repo` part. (The `id-num` is fetched by `gfm-wiki-insert-issue`)
+  - consider `((markdown-mode . ((gfm-wiki-repo-name . "NPACore/gfm-wiki"))))` in `.dir-local.el`
+
+* `gfm-wiki-insert-issue` command for getting issue number (to insert) and title (for search). Currently using `git-bug|jq` after `git bug bridge` with github. See [`Makefile.example`](Makefile.example)'s git-bug entry.
 
 ### Functions and Dependencies
 * `gfm-wiki-insert-link-header` shells out to `perl` for finding headers.

@@ -24,17 +24,25 @@
 ;;; Code:
 (require 'ivy)
 (require 'subr-x)
-(require 'emacs "26.1")
 
-(defvar gfm-wiki-repo-name "NPACore/npac-interal"
-  "Repo name for issue insert.  Translated by gollumn/github markdown render.")
-(defvar gfm-wiki-issue-cmd
+(defgroup gfm-wiki nil
+  "Markdown with github issues and link insertion."
+  :group 'text
+  :prefix "gfm-wiki-"
+  :tag "gfm-wiki"
+  :link '(url-link "https://github.com/NPACore/gfm-wiki"))
+
+(defcustom gfm-wiki-repo-name "NPACore/npac-interal"
+  "Repo name for issue insert.  Translated by gollumn/github markdown render."
+  :group 'gfm-wiki :type 'string)
+(defcustom gfm-wiki-issue-cmd
   "git bug ls -f json |
    jq -r '.[]|[(.metadata.\"github-url\"|gsub(\".*/\";\"\")), .title]|@tsv'"
   "Command to get issues.
 Expect records to be new line spearated.
 Fields 'number' and 'title' are tab separated.
-As an alternative, consider formating 'gh issues'.")
+As an alternative, consider formating 'gh issues'."
+  :group 'gfm-wiki :type 'string)
 
 (defun gfm-wiki-get-issues-gb ()
   "Use git-bug|jq to find issues number.  Could use 'gh issue'.
