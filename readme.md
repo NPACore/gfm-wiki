@@ -24,7 +24,6 @@ TODO: add line number and improve messages. maybe rewrite in compiled language.
 5. optionally: can check or "orphan" headers that are never linked to
 
 ### Example
-
 ```
 echo -e "# testing\n## [dne](test.md#does-not-exist)" > test.md
 wiki-lint.pl
@@ -38,14 +37,17 @@ wiki-lint.pl
 
 This file/emacs package contains functions for quickly linking topics between files.
 
-
 ### Install
-Use <kbd>M-x</kbd> `list-packages` to install `use-package-quelpa`. then add below to e.g. `$HOME/.config/emacs/init.el`. 
+Use <kbd>M-x</kbd> `list-packages` to install `quelpa-use-package`. then add below to e.g. `$HOME/.config/emacs/init.el`. 
 
 ```elisp
 (use-package gfm-wiki
-  :quelpa ((gfm-wiki :fetcher github :repo "NPACore/gfm-wiki") :upgrade nil)
-  :ensure t)
+  :quelpa ((gfm-wiki :fetcher github :repo "NPACore/gfm-wiki") :upgrade t)
+  :bind (:map markdown-mode-map
+              ("C-c M-l" . #'gfm-wiki-insert-link-header)
+              ("C-c M-L" . #'gfm-wiki-insert-link)
+              ("C-c M-i" . #'gfm-wiki-insert-issue)
+              ("C-c M-d" . #'gfm-wiki-deft)))
 ```
 
 ### Variables
@@ -60,3 +62,6 @@ Use <kbd>M-x</kbd> `list-packages` to install `use-package-quelpa`. then add bel
 * `gfm-wiki-deft` wraps emacs package [`deft`](https://github.com/jrblevin/deft) for a open/create files with search narrowing
 Consider modify `gfm-wiki-issue-cmd` to use [`gh`](https://cli.github.com/) instead.
 * The emacs package `ivy` is used for "completing-read" functions. 
+
+### Other packages
+* [`link-hint`](https://github.com/noctuid/link-hint.el/tree/36ce929331f2838213bcaa1145ece4b73ce84afe) is especially useful for quickly jumping from any link on the screen.
