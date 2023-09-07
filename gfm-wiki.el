@@ -1,5 +1,11 @@
-;;; package --- gfm-wiki
+;;; gfm-wiki.el --- Utils for markdown wiki link and issue inserts
 
+;; Author: Will Foran <foranw@upmc.edu>
+;; Keywords: tools convenience outlines
+;; Package-Requires: ((emacs "26.1") (ivy "0.14.0"))
+;; Package-Version: 0.1.20230906
+;; URL: https://github.com/NPACore/gfm-wiki
+;; 
 ;;; Commentary:
 ;; Github Formated Markup untilities for flat directory markdown "wiki".
 ;; Provides: inserting markdown links and issues formated for github's markdown parser.
@@ -7,19 +13,18 @@
 ;; But we could wrap `gh issues' instead (see `gfm-wiki-issue-cmd').
 ;; 
 ;; for issue linking/rendering on github
-;; `gfm-wiki-repo-name' is variable for storing the 'repo' in 'repo#issue'
+;; `gfm-wiki-repo-name' is variable for storing the 'repo' in 'repo#issue'.
 ;; 
 ;;
 ;; Consider link-hint for quickly jumping to pages with links.
 ;; TODO:
 ;;  * backlink search
-;;  * header search and insert
-;;  * deft or ag for link insert based on any matching text
-;; 20230903WF - init
+
 
 ;;; Code:
 (require 'ivy)
 (require 'subr-x)
+(require 'emacs "26.1")
 
 (defvar gfm-wiki-repo-name "NPACore/npac-interal"
   "Repo name for issue insert.  Translated by gollumn/github markdown render.")
@@ -72,8 +77,11 @@ The returned list is tab seaprated with elements like \"number\ttitle\""
 (provide 'gfm-wiki)
 
 (defun gfm-wiki-insert-link-header ()
+  "Present choice of all file#headers.  Insert selected as a markdown link."
   (interactive)
   (if-let* ((file-header (split-string (shell-command-to-string "perl -lne 'print \"$ARGV#\".lc($1=~s/ /-/gr) if /^#+ (.*)/' *md") "\n"))
             (link (ivy-completing-read "link-to: " file-header)))
       (insert (concat "[](" link ")"))))
+
+(provide 'gfm-wiki)
 ;;; gfm-wiki.el ends here
