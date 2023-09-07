@@ -47,7 +47,11 @@ Use <kbd>M-x</kbd> `list-packages` to install `quelpa-use-package`. then add bel
               ("C-c M-l" . #'gfm-wiki-insert-link-header)
               ("C-c M-L" . #'gfm-wiki-insert-link)
               ("C-c M-i" . #'gfm-wiki-insert-issue)
-              ("C-c M-d" . #'gfm-wiki-deft)))
+              ("C-c M-d" . #'gfm-wiki-deft)
+              ;; other packages  -- better to define elsewhere
+              ("C-c l"   . #'link-hint-open-link)
+              ("C-c g"   . #'git-link)
+              ))
 ```
 
 ### Variables
@@ -65,3 +69,4 @@ Consider modify `gfm-wiki-issue-cmd` to use [`gh`](https://cli.github.com/) inst
 
 ### Other packages
 * [`link-hint`](https://github.com/noctuid/link-hint.el/tree/36ce929331f2838213bcaa1145ece4b73ce84afe) is especially useful for quickly jumping from any link on the screen.
+* [`git-link`](https://github.com/sshaw/git-link) to get or goto a github link of current file
