@@ -57,9 +57,14 @@ Use <kbd>M-x</kbd> `list-packages` to install `quelpa-use-package`. then add bel
 ### Variables
 * `gfm-wiki-repo-name` contains the prefix for issues. github.com will render a link from anything thing that looks like `org/repo#id-num`. This variable stores the `org/repo` part. (The `id-num` is fetched by `gfm-wiki-insert-issue`)
   - consider `((markdown-mode . ((gfm-wiki-repo-name . "NPACore/gfm-wiki"))))` in `.dir-local.el`
+  - TODO: pull this from `git remote -v|grep -Pom1 '(?<=github.com.).*(?=.git )'`
 
 * `gfm-wiki-insert-issue` command for getting issue number (to insert) and title (for search). Currently using `git-bug|jq` after `git bug bridge` with github. See [`Makefile.example`](Makefile.example)'s git-bug entry.
 
+* `gfm-wiki-mkdocs-root` changes link insert to add a prefix (likely "/"). Setting this to non-nil has the side-effect of also stripping the `.md` suffix. 
+  - consider `.dir-locals.el`: `((markdown-mode . ((gfm-wiki-mkdocs-root . "/"))))` 
+  - TODO: update link/ffap to follow these links
+  - TODO: wiki-lint.pl should understand mkdocs links too
 ### Functions and Dependencies
 * `gfm-wiki-insert-link-header` shells out to `perl` for finding headers.
 * `gfm-wiki-insert-issues` uses [`git-bug`](https://github.com/MichaelMure/git-bug/) and `jq` to insert issues bridged to github.

@@ -35,6 +35,11 @@
 (defcustom gfm-wiki-repo-name "NPACore/npac-interal"
   "Repo name for issue insert.  Translated by gollumn/github markdown render."
   :group 'gfm-wiki :type 'string)
+(defcustom gfm-wiki-mkdocs-root nil
+  "Mkdocs (and maybe hugo?) links are '/file/' instead of 'file.md'.
+Set `gfm-wiki-mkdocs-root' to e.g. '/' to insert links with leading '/'.
+Side effect is to also strip  '.md'"
+  :group 'gfm-wiki :type 'string)
 (defcustom gfm-wiki-issue-cmd
   "git bug ls -f json |
    jq -r '.[]|[(.metadata.\"github-url\"|gsub(\".*/\";\"\")), .title]|@tsv'"
@@ -58,6 +63,16 @@ The returned list is tab seaprated with elements like \"number\ttitle\""
            (issue-num (replace-regexp-in-string "\t.*" "" issue)))
            (insert (concat gfm-wiki-repo-name "#" issue-num))))
 
+(defun gfm-wiki-md-link (text fname)
+  "Create markdown link from TEXT to FNAME.
+Looks to `gfm-wiki-mkdocs-root' for root and to strip .md extention."
+  (let ((fname
+         (if gfm-wiki-mkdocs-root
+             (concat gfm-wiki-mkdocs-root
+                     (replace-regexp-in-string ".md\\($\\|#\\)" "/\\1" fname))
+           fname)))
+       (concat "[" text "]" "(" fname ")" )))
+
 (defun gfm-wiki-insert-link ()
   "Insert link to markdown file chosen from current directory."
   (interactive)
@@ -68,7 +83,7 @@ The returned list is tab seaprated with elements like \"number\ttitle\""
            (file (ivy-completing-read "file: " files))
            (fname (replace-regexp-in-string "^./\\|.md$" "" file)))
       ;; 3. insert with  [file](file.md) warping
-      (insert(concat "[" fname "]" "(" fname ".md)"))))
+      (insert(gfm-wiki-md-link fname (concat fname ".md")))))
 
 ;; https://github.com/jrblevin/deft/issues/65
 (defun gfm-wiki-deft ()
@@ -82,14 +97,13 @@ The returned list is tab seaprated with elements like \"number\ttitle\""
       (deft-refresh))
   (deft))
 
-(provide 'gfm-wiki)
-
 (defun gfm-wiki-insert-link-header ()
   "Present choice of all file#headers.  Insert selected as a markdown link."
   (interactive)
-  (if-let* ((file-header (split-string (shell-command-to-string "perl -lne 'print \"$ARGV#\".lc($1=~s/ /-/gr) if /^#+ (.*)/' *md") "\n"))
-            (link (ivy-completing-read "link-to: " file-header)))
-      (insert (concat "[](" link ")"))))
+  (if-let* ((file-header (split-string (shell-command-to-string "perl -lne 'print \"$ARGV#\".lc($1=~s/ /-/gr).\"\t$1\" if /^#+ (.*)/' *md") "\n"))
+            (selection (ivy-completing-read "link-to: " file-header))
+            (link-header (split-string selection "\t") ))
+      (insert (gfm-wiki-md-link  (nth 1 link-header)  (car link-header)))))
 
 (provide 'gfm-wiki)
 ;;; gfm-wiki.el ends here
